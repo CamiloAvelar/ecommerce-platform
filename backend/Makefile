@@ -6,19 +6,19 @@ config:
 build:
 	docker-compose build
 
-up: config
+up: 
 	docker-compose up -d
 
-watch: config
+watch: 
 	WATCH_FILES=1 docker-compose up -d
 
-down: config
+down: 
 	docker-compose down
 
-debug: down config
+debug: down 
 	WATCH_FILES=1 docker-compose -f docker-compose.yml -f ./docker/debug.yml up -d
 
-start: config
+start: 
 	docker-compose start
 
 stop:
