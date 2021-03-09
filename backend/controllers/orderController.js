@@ -165,18 +165,44 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @route   GET /api/orders/user
 // @access  Private
 const getLoggedUserOders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
+  const pageSize = +req.query.pageSize || 2;
+  const page = +req.query.page || 1;
 
-  res.json(orders);
+  const count = await Order.countDocuments({ user: req.user._id });
+  const orders = await Order.find({ user: req.user._id })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ orders, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  Private/Admin
-const getOders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate('user', 'id name');
+const getOrders = asyncHandler(async (req, res) => {
+  const pageSize = +req.query.pageSize || 2;
+  const page = +req.query.page || 1;
 
-  res.json(orders);
+  const keyword = req.query.keyword
+    ? {
+        $or: [
+          {
+            user: req.query.keyword,
+          },
+          {
+            _id: req.query.keyword,
+          },
+        ],
+      }
+    : {};
+
+  const count = await Order.countDocuments({ ...keyword });
+  const orders = await Order.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1))
+    .populate('user', 'id name');
+
+  res.json({ orders, page, pages: Math.ceil(count / pageSize) });
 });
 
 export {
@@ -184,6 +210,6 @@ export {
   getOrderById,
   updateOrderToPaid,
   getLoggedUserOders,
-  getOders,
+  getOrders,
   updateOrderToDelivered,
 };

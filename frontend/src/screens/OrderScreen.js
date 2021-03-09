@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap';
+import {
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  Button,
+  Container,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -201,7 +209,17 @@ const OrderScreen = ({ match, history }) => {
                       Go to billet
                     </Button>
                   ) : order.paymentMethod === 'Pix' ? (
-                    <img src={order.paymentResult.qr_code} alt='qrCode'></img>
+                    <Container>
+                      <Row className='justify-content-md-center'>
+                        <Image
+                          className='d-block mx-auto img-fluid'
+                          src={order.paymentResult.qr_code}
+                          alt='qrCode'
+                          fluid
+                        ></Image>
+                        <p>Pix QrCode</p>
+                      </Row>
+                    </Container>
                   ) : (
                     'Not implemented payment'
                   )}

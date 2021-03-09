@@ -26,20 +26,70 @@ const App = () => {
       <main className='py-3'>
         <Container>
           <Route path='/' component={HomeScreen} exact />
+          <Route path='/page/:pageNumber' component={HomeScreen} exact />
+          <Route
+            path='/search/:keyword/page/:pageNumber'
+            component={HomeScreen}
+            exact
+          />
+          <Route path='/search/:keyword' component={HomeScreen} exact />
           <Route path='/product/:id' component={ProductScreen} />
           <Route path='/cart/:id?' component={CartScreen} />
           <Route path='/login' component={LoginScreen} />
           <Route path='/register' component={RegisterScreen} />
-          <Route path='/profile' component={ProfileScreen} />
+          <Route path='/profile' component={ProfileScreen} exact />
+          <Route path='/profile/orders/:pageNumber' component={ProfileScreen} />
           <Route path='/shipping' component={ShippingScreen} />
           <Route path='/payment' component={PaymentScreen} />
           <Route path='/placeOrder' component={PlaceOrderScreen} />
           <Route path='/order/:id' component={OrderScreen} />
-          <Route path='/admin/user/list' component={UserListScreen} />
-          <Route path='/admin/user/:id/edit' component={UserEditScreen} />
-          <Route path='/admin/product/list' component={ProductListScreen} />
+          <Route path='/admin/user/list' component={UserListScreen} exact />
+          <Route
+            path='/admin/user/list/:pageNumber'
+            component={UserListScreen}
+            exact
+          />
+          <Route
+            path='/search/:keyword/admin/user/list/:pageNumber'
+            component={UserListScreen}
+            exact
+          />
+          <Route
+            path='/search/:keyword/admin/user/list'
+            component={UserListScreen}
+            exact
+          />
+          <Route path='/admin/user/:id/edit' component={UserEditScreen} exact />
+          <Route
+            path='/admin/user/:id/edit/:pageNumber'
+            component={UserEditScreen}
+            exact
+          />
+          <Route
+            path='/admin/product/list'
+            component={ProductListScreen}
+            exact
+          />
+          <Route
+            path='/admin/product/list/:pageNumber'
+            component={ProductListScreen}
+            exact
+          />
           <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
-          <Route path='/admin/orders/list' component={OrderListScreen} />
+          <Route path='/admin/orders/list' component={OrderListScreen} exact />
+          <Route
+            path='/admin/orders/list/:pageNumber'
+            component={OrderListScreen}
+            exact
+          />
+          <Route
+            path='/search/:keyword/admin/orders/list/:pageNumber'
+            component={OrderListScreen}
+          />
+          <Route
+            path='/search/:keyword/admin/orders/list'
+            component={OrderListScreen}
+          />
         </Container>
       </main>
       <Footer />

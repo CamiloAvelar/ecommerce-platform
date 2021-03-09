@@ -169,7 +169,10 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
   }
 };
 
-export const loggedListOrder = () => async (dispatch, getState) => {
+export const loggedListOrder = (pageNumber, pageSize) => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch({
       type: ORDER_LIST_LOGGED_REQUEST,
@@ -185,7 +188,10 @@ export const loggedListOrder = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders/user`, config);
+    const { data } = await axios.get(
+      `/api/orders/user?page=${pageNumber}&pageSize=${pageSize}`,
+      config
+    );
 
     dispatch({
       type: ORDER_LIST_LOGGED_SUCCESS,
@@ -202,7 +208,10 @@ export const loggedListOrder = () => async (dispatch, getState) => {
   }
 };
 
-export const listOrders = () => async (dispatch, getState) => {
+export const listOrders = (keyword, pageNumber, pageSize) => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch({
       type: ORDER_LIST_REQUEST,
@@ -218,7 +227,10 @@ export const listOrders = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders`, config);
+    const { data } = await axios.get(
+      `/api/orders?page=${pageNumber}&pageSize=${pageSize}&keyword=${keyword}`,
+      config
+    );
 
     dispatch({
       type: ORDER_LIST_SUCCESS,
