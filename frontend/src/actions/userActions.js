@@ -27,7 +27,7 @@ import axios from 'axios';
 
 import { ORDER_LIST_LOGGED_RESET } from '../constants/orderConstants';
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (emailOrDocument, password) => async (dispatch) => {
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
@@ -41,7 +41,7 @@ export const login = (email, password) => async (dispatch) => {
 
     const { data } = await axios.post(
       '/api/users/login',
-      { email, password },
+      { emailOrDocument, password },
       config
     );
 
@@ -70,7 +70,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: ORDER_LIST_LOGGED_RESET });
 };
 
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (user) => async (dispatch) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
@@ -82,11 +82,7 @@ export const register = (name, email, password) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.post(
-      '/api/users',
-      { name, email, password },
-      config
-    );
+    const { data } = await axios.post('/api/users', user, config);
 
     dispatch({
       type: USER_REGISTER_SUCCESS,

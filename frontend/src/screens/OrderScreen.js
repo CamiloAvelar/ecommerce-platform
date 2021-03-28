@@ -203,7 +203,7 @@ const OrderScreen = ({ match, history }) => {
                     <Button
                       type='button'
                       className='btn btn-block'
-                      href={order.paymentResult.billet_link}
+                      href={order.paymentResult?.billet_link}
                       target='blank'
                     >
                       Go to billet
@@ -213,7 +213,7 @@ const OrderScreen = ({ match, history }) => {
                       <Row className='justify-content-md-center'>
                         <Image
                           className='d-block mx-auto img-fluid'
-                          src={order.paymentResult.qr_code}
+                          src={order.paymentResult?.qr_code}
                           alt='qrCode'
                           fluid
                         ></Image>

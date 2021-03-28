@@ -6,9 +6,18 @@ import generateToken from '../utils/generateToken.js';
 // @route   POST /api/users/login
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { emailOrDocument, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({
+    $or: [
+      {
+        email: emailOrDocument,
+      },
+      {
+        document: emailOrDocument,
+      },
+    ],
+  });
 
   if (user && (await user.matchPassword(password))) {
     res.json({
@@ -28,7 +37,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, document } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -40,6 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     name,
     email,
+    document,
     password,
   });
 
@@ -82,6 +92,12 @@ const getUsers = asyncHandler(async (req, res) => {
           },
           {
             email: {
+              $regex: req.query.keyword,
+              $options: 'i',
+            },
+          },
+          {
+            document: {
               $regex: req.query.keyword,
               $options: 'i',
             },
@@ -134,10 +150,14 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
+    if (!(await user.matchPassword(req.body.password))) {
+      throw new Error('Wrong Password');
+    }
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    if (req.body.password) {
-      user.password = req.body.password;
+    user.document = req.body.document || user.document;
+    if (req.body.newPassword) {
+      user.password = req.body.newPassword;
     }
 
     const updatedUser = await user.save();
@@ -146,6 +166,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      document: updatedUser.document,
       isAdmin: updatedUser.isAdmin,
       token: generateToken(updatedUser._id),
     });
@@ -164,6 +185,7 @@ const updateUser = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
+    user.document = req.body.document || user.document;
     user.isAdmin = req.body.isAdmin;
 
     const updatedUser = await user.save();
@@ -171,6 +193,7 @@ const updateUser = asyncHandler(async (req, res) => {
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
+      document: updatedUser.document,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
     });

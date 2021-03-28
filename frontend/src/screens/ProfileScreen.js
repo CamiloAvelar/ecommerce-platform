@@ -5,19 +5,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
+import DocumentMask from '../components/DocumentMask';
 import { getUserDetails, updateUserProfile } from '../actions/userActions';
-import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants';
+import {
+  USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_RESET,
+} from '../constants/userConstants';
 import { loggedListOrder } from '../actions/orderActions';
 
-const ProfileScreen = ({ location, history, match }) => {
+const ProfileScreen = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1;
   const pageSize = 10;
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [document, setDocument] = useState('');
+  const [hidden, setHidden] = useState(true);
+  const [successUpdate, setSuccessUpdate] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -28,7 +36,7 @@ const ProfileScreen = ({ location, history, match }) => {
   const { userInfo } = userLogin;
 
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
-  const { success } = userUpdateProfile;
+  const { success, error: errorUpdate } = userUpdateProfile;
 
   const orderLoggedList = useSelector((state) => state.orderLoggedList);
   const {
@@ -46,9 +54,19 @@ const ProfileScreen = ({ location, history, match }) => {
       if (!user?.name || success) {
         dispatch({ type: USER_UPDATE_PROFILE_RESET });
         dispatch(getUserDetails('profile'));
+        if (success) {
+          setSuccessUpdate(true);
+          setTimeout(() => {
+            setSuccessUpdate(false);
+          }, 1500);
+        }
       } else {
         setName(user.name);
         setEmail(user.email);
+        setDocument(user.document);
+        setPassword('');
+        setNewPassword('');
+        setConfirmNewPassword('');
       }
 
       dispatch(loggedListOrder(pageNumber, pageSize));
@@ -58,10 +76,19 @@ const ProfileScreen = ({ location, history, match }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (newPassword !== confirmNewPassword) {
       setMessage('Password do not match');
+    } else if (
+      user.name === name &&
+      user.document === document &&
+      user.email === email &&
+      !newPassword
+    ) {
+      dispatch({ type: USER_UPDATE_PROFILE_FAIL, payload: 'No changes found' });
     } else {
-      dispatch(updateUserProfile({ id: user._id, name, email, password }));
+      dispatch(
+        updateUserProfile({ id: user._id, name, email, password, newPassword })
+      );
     }
   };
 
@@ -70,8 +97,9 @@ const ProfileScreen = ({ location, history, match }) => {
       <Col md={3}>
         <h2>User Profile</h2>
         {error && <Message variant='danger'>{error}</Message>}
+        {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
         {message && <Message variant='danger'>{message}</Message>}
-        {success && <Message variant='success'>Profile Updated</Message>}
+        {successUpdate && <Message variant='success'>Profile Updated</Message>}
         {loading && <Loader />}
         <Form onSubmit={submitHandler}>
           <Form.Group controlId='name'>
@@ -92,25 +120,51 @@ const ProfileScreen = ({ location, history, match }) => {
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId='confirmPassword'>
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type='password'
-              placeholder='Confirm Password'
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            ></Form.Control>
+          <Form.Group controlId='document'>
+            <Form.Label>Document</Form.Label>
+            <DocumentMask type='text' value={document} disabled></DocumentMask>
           </Form.Group>
           <Form.Group controlId='password'>
-            <Form.Label>Password</Form.Label>
+            <Form.Label>Password *</Form.Label>
             <Form.Control
               type='password'
               placeholder='Enter Password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             ></Form.Control>
           </Form.Group>
-
+          <Button
+            variant='secondary'
+            className='mb-3'
+            onClick={() => setHidden(!hidden)}
+          >
+            Change password
+          </Button>{' '}
+          {hidden ? (
+            ''
+          ) : (
+            <>
+              <Form.Group controlId='newPassword'>
+                <Form.Label>New Password</Form.Label>
+                <Form.Control
+                  type='password'
+                  placeholder='Enter Password'
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group controlId='confirmNewPassword'>
+                <Form.Label>Confirm New Password</Form.Label>
+                <Form.Control
+                  type='password'
+                  placeholder='Confirm Password'
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </>
+          )}
           <Button type='submit' variant='primary'>
             Update
           </Button>

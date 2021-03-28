@@ -28,9 +28,9 @@ const addOrderItems = asyncHandler(async (req, res) => {
             customer: {
               name: req.user.name,
               email: req.user.email,
-              cpf: '01620006693',
+              cpf: req.user.document,
               birth: '1994-02-08',
-              phone_number: '31991215615',
+              phone_number: req.user.phone_number,
             },
           },
         },
@@ -64,7 +64,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       }
     } else if (paymentMethod === 'Pix') {
       const pixInfo = {
-        document: '01620006693',
+        document: req.user.document,
         name: req.user.name,
         value: String(totalPrice),
         additionalInfo: orderItems.map((orderItem) => {

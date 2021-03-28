@@ -96,7 +96,7 @@ export const createPixCharge = async (pixInfo) => {
 
     return response.imagemQrcode;
   } catch (err) {
-    console.log(err.response.data.erros);
+    console.log(err.response);
     throw err;
   }
 };

@@ -49,7 +49,6 @@ const ProductScreen = ({ history, match }) => {
     dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
 
     if (successProductReview) {
-      alert('Review submited');
       setRating(0);
       setComment('');
     }
@@ -199,77 +198,18 @@ const ProductScreen = ({ history, match }) => {
                     <Form onSubmit={submitHandler}>
                       <Form.Group controlId='rating'>
                         <Form.Label>Rating </Form.Label>{' '}
-                        <span>
-                          <i
-                            style={{ color: '#f8e825', cursor: 'pointer' }}
-                            className={
-                              rating >= 1
-                                ? 'fas fa-star'
-                                : rating >= 0.5
-                                ? 'fas fa-star-half-alt'
-                                : 'far fa-star'
-                            }
-                            onClick={() => setRating(1)}
-                          ></i>
-                        </span>
-                        <span>
-                          <i
-                            style={{ color: '#f8e825', cursor: 'pointer' }}
-                            className={
-                              rating >= 2
-                                ? 'fas fa-star'
-                                : rating >= 1.5
-                                ? 'fas fa-star-half-alt'
-                                : 'far fa-star'
-                            }
-                            onClick={() => setRating(2)}
-                          ></i>
-                        </span>
-                        <span>
-                          <i
-                            style={{ color: '#f8e825', cursor: 'pointer' }}
-                            className={
-                              rating >= 3
-                                ? 'fas fa-star'
-                                : rating >= 2.5
-                                ? 'fas fa-star-half-alt'
-                                : 'far fa-star'
-                            }
-                            onClick={() => setRating(3)}
-                          ></i>
-                        </span>
-                        <span>
-                          <i
-                            style={{ color: '#f8e825', cursor: 'pointer' }}
-                            className={
-                              rating >= 4
-                                ? 'fas fa-star'
-                                : rating >= 3.5
-                                ? 'fas fa-star-half-alt'
-                                : 'far fa-star'
-                            }
-                            onClick={() => setRating(4)}
-                          ></i>
-                        </span>
-                        <span>
-                          <i
-                            style={{ color: '#f8e825', cursor: 'pointer' }}
-                            className={
-                              rating >= 5
-                                ? 'fas fa-star'
-                                : rating >= 4.5
-                                ? 'fas fa-star-half-alt'
-                                : 'far fa-star'
-                            }
-                            onClick={() => setRating(5)}
-                          ></i>
-                        </span>
+                        <Rating
+                          value={rating}
+                          cursor='pointer'
+                          onClick={setRating}
+                        />
                       </Form.Group>
                       <Form.Group controlId='comment'>
                         <Form.Label>Comment</Form.Label>
                         <Form.Control
                           as='textarea'
                           row='3'
+                          value={comment}
                           onChange={(e) => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>

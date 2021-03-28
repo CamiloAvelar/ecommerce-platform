@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import FormContainer from '../components/FormContainer';
+import DocumentMask from '../components/DocumentMask';
 import { login } from '../actions/userActions';
 
 const LoginScreen = ({ location, history }) => {
-  const [email, setEmail] = useState('');
+  const [emailOrDocument, setEmailOrDocument] = useState('');
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const LoginScreen = ({ location, history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    dispatch(login(email, password));
+    dispatch(login(emailOrDocument, password));
   };
 
   return (
@@ -36,14 +37,15 @@ const LoginScreen = ({ location, history }) => {
       {error && <Message variant='danger'>{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
-        <Form.Group controlId='email'>
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type='email'
-            placeholder='Enter email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
+        <Form.Group controlId='emailOrDocument'>
+          <Form.Label>Email or Document</Form.Label>
+          <DocumentMask
+            type='text'
+            placeholder='Enter email or document'
+            value={emailOrDocument}
+            onChange={(e) => setEmailOrDocument(e.target.value)}
+            useMask={false}
+          ></DocumentMask>
         </Form.Group>
         <Form.Group controlId='password'>
           <Form.Label>Password</Form.Label>

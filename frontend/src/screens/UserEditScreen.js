@@ -4,6 +4,7 @@ import { Form, Button, Table, Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import DocumentMask from '../components/DocumentMask';
 import { getUserDetails, updateUser } from '../actions/userActions';
 import { listOrders } from '../actions/orderActions';
 import { USER_UPDATE_RESET } from '../constants/userConstants';
@@ -18,6 +19,7 @@ const UserEditScreen = ({ match, history }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isAdmin, setIsAdmin] = useState('');
+  const [document, setDocument] = useState('');
 
   const dispatch = useDispatch();
 
@@ -58,6 +60,7 @@ const UserEditScreen = ({ match, history }) => {
         setName(user.name);
         setEmail(user.email);
         setIsAdmin(user.isAdmin);
+        setDocument(user.document);
       }
     }
 
@@ -111,6 +114,14 @@ const UserEditScreen = ({ match, history }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 ></Form.Control>
+              </Form.Group>
+              <Form.Group controlId='document'>
+                <Form.Label>Document</Form.Label>
+                <DocumentMask
+                  type='document'
+                  value={document}
+                  disabled
+                ></DocumentMask>
               </Form.Group>
               <Form.Group controlId='isAdmin'>
                 <Form.Check

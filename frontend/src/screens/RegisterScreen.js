@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import FormContainer from '../components/FormContainer';
+import DocumentMask from '../components/DocumentMask';
 import { register } from '../actions/userActions';
 
 const RegisterScreen = ({ location, history }) => {
@@ -13,6 +14,7 @@ const RegisterScreen = ({ location, history }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [document, setDocument] = useState('');
 
   const dispatch = useDispatch();
 
@@ -33,7 +35,7 @@ const RegisterScreen = ({ location, history }) => {
     if (password !== confirmPassword) {
       setMessage('Password do not match');
     } else {
-      dispatch(register(name, email, password));
+      dispatch(register({ name, email, password, document }));
     }
   };
 
@@ -51,6 +53,7 @@ const RegisterScreen = ({ location, history }) => {
             placeholder='Enter name'
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
         <Form.Group controlId='email'>
@@ -60,7 +63,19 @@ const RegisterScreen = ({ location, history }) => {
             placeholder='Enter email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           ></Form.Control>
+        </Form.Group>
+        <Form.Group controlId='document'>
+          <Form.Label>Document</Form.Label>
+          <DocumentMask
+            type='text'
+            placeholder='Enter document'
+            value={document}
+            onChange={(e) => setDocument(e.target.value)}
+            useMask={false}
+            required
+          ></DocumentMask>
         </Form.Group>
         <Form.Group controlId='confirmPassword'>
           <Form.Label>Confirm Password</Form.Label>
@@ -69,6 +84,7 @@ const RegisterScreen = ({ location, history }) => {
             placeholder='Confirm Password'
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
         <Form.Group controlId='password'>
@@ -78,6 +94,7 @@ const RegisterScreen = ({ location, history }) => {
             placeholder='Enter Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
 
