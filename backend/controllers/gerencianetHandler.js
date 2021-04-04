@@ -26,8 +26,8 @@ export const createBillet = (billetInfo) => {
 
 export const createPixCharge = async (pixInfo) => {
   const agent = new https.Agent({
-    cert: fs.readFileSync('/application/git-ignored/prod-pix.crt'),
-    key: fs.readFileSync('/application/git-ignored/prod-pix.pem'),
+    cert: process.env.PIX_CRT,
+    key: process.env.PIX_KEY,
     keepAlive: true,
     keepAliveMsecs: 5 * 60 * 1000,
   });
@@ -48,7 +48,7 @@ export const createPixCharge = async (pixInfo) => {
     const {
       data: { access_token },
     } = await axios.request({
-      url: `https://api-pix.gerencianet.com.br/oauth/token`,
+      url: `${process.env.PIX_URL}/oauth/token`,
       method: 'POST',
       data,
       ...config,
@@ -82,14 +82,14 @@ export const createPixCharge = async (pixInfo) => {
         loc: { id },
       },
     } = await axios.request({
-      url: `https://api-pix.gerencianet.com.br/v2/cob`,
+      url: `${process.env.PIX_URL}/v2/cob`,
       method: 'POST',
       data: data2,
       ...config2,
     });
 
     const { data: response } = await axios.request({
-      url: `https://api-pix.gerencianet.com.br/v2/loc/${id}/qrcode`,
+      url: `${process.env.PIX_URL}/v2/loc/${id}/qrcode`,
       method: 'GET',
       ...config2,
     });

@@ -9,8 +9,14 @@ import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import { loadConfig } from './config/config.js';
 
-dotenv.config();
+if (process.env.NODE_ENV === 'development') {
+  // dotenv.config();
+  await loadConfig();
+} else {
+  await loadConfig();
+}
 
 connectDB();
 
